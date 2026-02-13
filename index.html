@@ -207,7 +207,6 @@
             padding: 15px 35px;
             font-size: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            position: absolute;
         }
 
         .btn-nein.moving {
@@ -394,7 +393,6 @@
         let jaScale = 1;
 
         const funnyMessages = [
-            "Bist du sicher? \u{1F97A}",
             "Denk nochmal nach... \u{1F60F}",
             "Das war bestimmt ein Versehen! \u{1F609}",
             "Der Button ist wohl kaputt... \u{1F937}",
@@ -409,24 +407,26 @@
         function moveNeinButton() {
             neinAttempts++;
 
-            // Make Nein button move to random position
-            btnNein.classList.add('moving');
+            // Measure size BEFORE moving
+            const rect = btnNein.getBoundingClientRect();
+            const btnWidth = rect.width;
+            const btnHeight = rect.height;
 
-            const btnWidth = btnNein.offsetWidth || 120;
-            const btnHeight = btnNein.offsetHeight || 50;
+            // Move button out of parent container into body so it's fully independent
+            if (!btnNein.classList.contains('moving')) {
+                document.body.appendChild(btnNein);
+                btnNein.classList.add('moving');
+            }
+
             const margin = 20;
-
-            const minX = margin;
-            const minY = margin;
             const maxX = window.innerWidth - btnWidth - margin;
             const maxY = window.innerHeight - btnHeight - margin;
 
-            const randomX = minX + Math.random() * Math.max(0, maxX - minX);
-            const randomY = minY + Math.random() * Math.max(0, maxY - minY);
+            const randomX = margin + Math.random() * Math.max(0, maxX - margin);
+            const randomY = margin + Math.random() * Math.max(0, maxY - margin);
 
             btnNein.style.left = randomX + 'px';
             btnNein.style.top = randomY + 'px';
-            btnNein.style.transition = 'none';
 
             // Grow the Ja button (cap at 2x)
             jaScale = Math.min(2, jaScale + 0.12);
