@@ -356,7 +356,7 @@
         <div class="success-heart">&#128149;</div>
         <h1 class="success-title">Juhuuu! &#127881;</h1>
         <p class="success-subtitle">Ich wusste es!</p>
-        <p class="success-message">Du machst mich zum glücklichsten Menschen der Welt &#10084;&#65039;</p>
+        <p class="success-message">Ich Liebe dich &#10084;&#65039;</p>
     </div>
 
     <!-- Confetti Canvas -->
@@ -412,25 +412,26 @@
             // Make Nein button move to random position
             btnNein.classList.add('moving');
 
-            const padding = 80;
-            const maxX = window.innerWidth - btnNein.offsetWidth - padding;
-            const maxY = window.innerHeight - btnNein.offsetHeight - padding;
+            const btnWidth = btnNein.offsetWidth || 120;
+            const btnHeight = btnNein.offsetHeight || 50;
+            const margin = 20;
 
-            const randomX = Math.max(padding, Math.random() * maxX);
-            const randomY = Math.max(padding, Math.random() * maxY);
+            const minX = margin;
+            const minY = margin;
+            const maxX = window.innerWidth - btnWidth - margin;
+            const maxY = window.innerHeight - btnHeight - margin;
+
+            const randomX = minX + Math.random() * Math.max(0, maxX - minX);
+            const randomY = minY + Math.random() * Math.max(0, maxY - minY);
 
             btnNein.style.left = randomX + 'px';
             btnNein.style.top = randomY + 'px';
             btnNein.style.transition = 'none';
 
-            // Grow the Ja button
-            jaScale += 0.12;
+            // Grow the Ja button (cap at 2x)
+            jaScale = Math.min(2, jaScale + 0.12);
             btnJa.style.transform = `scale(${jaScale})`;
             btnJa.style.transition = 'transform 0.3s ease';
-
-            // Shrink Nein button slightly
-            const neinScale = Math.max(0.6, 1 - neinAttempts * 0.05);
-            btnNein.style.transform = `scale(${neinScale})`;
 
             // Show funny message
             const msg = funnyMessages[Math.min(neinAttempts - 1, funnyMessages.length - 1)];
