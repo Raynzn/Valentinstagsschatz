@@ -297,6 +297,37 @@
             animation: fadeInUp 0.8s ease-out 0.9s forwards;
         }
 
+        .btn-calendar {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+            padding: 16px 36px;
+            background: linear-gradient(135deg, #ff4d7d, #ff2d5e);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 45, 94, 0.4);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 1.2s forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-calendar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(255, 45, 94, 0.6);
+        }
+
+        .btn-calendar svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
         /* Confetti Canvas */
         #confetti-canvas {
             position: fixed;
@@ -356,6 +387,10 @@
         <h1 class="success-title">Juhuuu! &#127881;</h1>
         <p class="success-subtitle">Ich wusste es!</p>
         <p class="success-message">Ich Liebe dich &#10084;&#65039;</p>
+        <button class="btn-calendar" onclick="saveToCalendar()">
+            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+            Dinner-Date speichern &#128197;
+        </button>
     </div>
 
     <!-- Confetti Canvas -->
@@ -459,6 +494,39 @@
             for (let i = 0; i < 30; i++) {
                 setTimeout(createFloatingHeart, i * 100);
             }
+        }
+
+        // ===== Calendar Download =====
+        function saveToCalendar() {
+            const icsContent = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Valentinstag//DE',
+                'BEGIN:VEVENT',
+                'DTSTART:20260214T180000',
+                'DTEND:20260214T210000',
+                'SUMMARY:Valentinstags-Dinner im Yuoki',
+                'LOCATION:Yuoki\\, Ludwigsburger Str. 159\\, 70435 Stuttgart',
+                'DESCRIPTION:Unser Valentinstags-Date! \\u2764\\uFE0F',
+                'STATUS:CONFIRMED',
+                'BEGIN:VALARM',
+                'TRIGGER:-PT2H',
+                'ACTION:DISPLAY',
+                'DESCRIPTION:In 2 Stunden: Valentinstags-Dinner!',
+                'END:VALARM',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\r\n');
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'valentinstag-dinner.ics';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
 
         // ===== Confetti System =====
